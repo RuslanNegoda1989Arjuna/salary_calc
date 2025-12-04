@@ -1,54 +1,29 @@
-// src/App.jsx
+// src/components/App.jsx
 import React, { useState, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "./styles.css"; // створити styles.css в src або прибрати цей рядок
+import "../../index.css"; // шлях до index.css у src
 
 export const App = () => {
-  // inputs / controls
   const [group, setGroup] = useState("Пн 17:00");
-  const [moneyInput, setMoneyInput] = useState(""); // рядок, наприклад "100 200 50"
-  const [sum, setSum] = useState(0); // сума введених чисел
-  const [percentValue, setPercentValue] = useState(0); // 30 або 40
-  const [costOneLesson, setCostOneLesson] = useState(0); // per lesson cost
-  const [quantityPerMonth, setQuantityPerMonth] = useState(0); // 4 або 5
-  const [koLessonsCount, setKoLessonsCount] = useState(0); // 0..5
-  const [missedCount, setMissedCount] = useState(0); // 0..3
-  const [missedDates, setMissedDates] = useState([]); // array of yyyy-mm-dd strings
-
-  const [entries, setEntries] = useState([]); // created table rows
+  const [moneyInput, setMoneyInput] = useState("");
+  const [sum, setSum] = useState(0);
+  const [percentValue, setPercentValue] = useState(0);
+  const [costOneLesson, setCostOneLesson] = useState(0);
+  const [quantityPerMonth, setQuantityPerMonth] = useState(0);
+  const [koLessonsCount, setKoLessonsCount] = useState(0);
+  const [missedCount, setMissedCount] = useState(0);
+  const [missedDates, setMissedDates] = useState([]);
+  const [entries, setEntries] = useState([]);
   const costKoTrainer = 200;
 
-  // derived values
-  // percentAmount = Math.ceil(sum * percent/100)
-  const percentAmount = useMemo(() => {
-    if (percentValue === 0) return 0;
-    return Math.ceil((sum * percentValue) / 100);
-  }, [sum, percentValue]);
-
-  // koTrainerSum
+  const percentAmount = useMemo(() => (percentValue ? Math.ceil((sum * percentValue) / 100) : 0), [sum, percentValue]);
   const koTrainerSum = useMemo(() => koLessonsCount * costKoTrainer, [koLessonsCount]);
-
-  // total cost for missed lessons = costOneLesson * missedCount
   const costAllMissed = useMemo(() => costOneLesson * missedCount, [costOneLesson, missedCount]);
-
-  // totalIncome (sum of incomes of entries)
-  const totalIncome = useMemo(() => {
-    return entries.reduce((acc, e) => acc + e.income, 0);
-  }, [entries]);
-
-  // Handlers
+  const totalIncome = useMemo(() => entries.reduce((acc, e) => acc + e.income, 0), [entries]);
 
   const handleCalcSum = () => {
-    // split by spaces, parse ints, sum
-    const arr = moneyInput.split(" ").map((s) => s.trim());
-    const nums = arr
-      .filter((s) => s.length > 0)
-      .map((s) => {
-        const n = Number.parseInt(s, 10);
-        return Number.isNaN(n) ? 0 : n;
-      });
-    const total = nums.reduce((a, b) => a + b, 0);
-    setSum(total);
+    const nums = moneyInput.split(" ").map((s) => Number.parseInt(s) || 0);
+    setSum(nums.reduce((a, b) => a + b, 0));
   };
 
   const handleClear = () => {
@@ -65,28 +40,18 @@ export const App = () => {
 
   const handlePercentChange = (val) => {
     setPercentValue(val);
-    // recalc costOneLesson if quantityPerMonth present
-    if (quantityPerMonth) {
-      setCostOneLesson(Math.round(Math.ceil((sum * val) / 100) / quantityPerMonth));
-    }
+    if (quantityPerMonth) setCostOneLesson(Math.round(Math.ceil((sum * val) / 100) / quantityPerMonth));
   };
 
   const handleQuantityChange = (val) => {
     setQuantityPerMonth(val);
-    if (val) {
-      // use current percentValue and sum
-      const cOne = Math.round(percentAmount / val);
-      setCostOneLesson(cOne);
-    }
+    if (val) setCostOneLesson(Math.round(percentAmount / val));
   };
 
-  const handleKoLessonsChange = (val) => {
-    setKoLessonsCount(val);
-  };
+  const handleKoLessonsChange = (val) => setKoLessonsCount(val);
 
   const handleMissedCountChange = (val) => {
     setMissedCount(val);
-    // adjust missedDates array length
     setMissedDates((prev) => {
       const next = [...prev];
       while (next.length < val) next.push("");
@@ -105,29 +70,22 @@ export const App = () => {
 
   const handleCreateEntry = () => {
     const id = uuidv4();
-    // income = percentAmount + koTrainerSum - costAllMissed
     const income = percentAmount + koTrainerSum - costAllMissed;
     const entry = {
       id,
       group,
       percentAmount,
       koTrainerSum,
-      missedDates: missedDates.filter(Boolean), // only filled dates
+      missedDates: missedDates.filter(Boolean),
       costOneLesson,
       costAllMissed,
       income,
     };
     setEntries((prev) => [...prev, entry]);
-
-    // after create keep form as is OR reset certain fields — original kept most values
-    // We'll reset only missedDates and missedCount (optional) — here keep as is.
   };
 
-  const handleRemoveEntry = (id) => {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
-  };
+  const handleRemoveEntry = (id) => setEntries((prev) => prev.filter((e) => e.id !== id));
 
-  // JSX UI
   return (
     <div className="salary-app" style={{ padding: 20, maxWidth: 900, margin: "0 auto" }}>
       <h1 className="title">Підрахунок ЗП</h1>
@@ -151,12 +109,10 @@ export const App = () => {
             autoFocus
           />
         </div>
-
         <div>
           <button className="calc-total" type="button" onClick={handleCalcSum} style={{ padding: "8px 12px" }}>
             Додати (порахувати)
           </button>
-
           <p className="total">Сума = <span className="total-num">{sum}</span></p>
         </div>
       </div>
@@ -178,64 +134,28 @@ export const App = () => {
       <div style={{ marginTop: 12 }}>
         <p>Відсоток кураторських:</p>
         <label style={{ marginRight: 8 }}>
-          <input
-            type="radio"
-            name="percent"
-            value="30"
-            checked={percentValue === 30}
-            onChange={() => handlePercentChange(30)}
-          />
-          30%
+          <input type="radio" name="percent" value="30" checked={percentValue === 30} onChange={() => handlePercentChange(30)} /> 30%
         </label>
-
         <label>
-          <input
-            type="radio"
-            name="percent"
-            value="40"
-            checked={percentValue === 40}
-            onChange={() => handlePercentChange(40)}
-          />
-          40%
+          <input type="radio" name="percent" value="40" checked={percentValue === 40} onChange={() => handlePercentChange(40)} /> 40%
         </label>
-
         <p>Кураторські (сума): <strong>{percentAmount}</strong></p>
       </div>
 
       <div style={{ marginTop: 12 }}>
         <p>Кількість занять в місяці:</p>
         <label style={{ marginRight: 8 }}>
-          <input
-            type="radio"
-            name="quantity"
-            value="4"
-            checked={quantityPerMonth === 4}
-            onChange={() => handleQuantityChange(4)}
-          />
-          4
+          <input type="radio" name="quantity" value="4" checked={quantityPerMonth === 4} onChange={() => handleQuantityChange(4)} /> 4
         </label>
-
         <label>
-          <input
-            type="radio"
-            name="quantity"
-            value="5"
-            checked={quantityPerMonth === 5}
-            onChange={() => handleQuantityChange(5)}
-          />
-          5
+          <input type="radio" name="quantity" value="5" checked={quantityPerMonth === 5} onChange={() => handleQuantityChange(5)} /> 5
         </label>
-
         <p>Вартість одного заняття = <span className="cost-lesson">{costOneLesson}</span></p>
       </div>
 
       <div style={{ marginTop: 12 }}>
         <p>Ко-тренерські:</p>
-        <select
-          className="select-ko-lesson"
-          value={koLessonsCount}
-          onChange={(e) => handleKoLessonsChange(Number(e.target.value))}
-        >
+        <select className="select-ko-lesson" value={koLessonsCount} onChange={(e) => handleKoLessonsChange(Number(e.target.value))}>
           <option value={0}>0 Занять</option>
           <option value={1}>1 Заняття</option>
           <option value={2}>2 Заняття</option>
@@ -248,11 +168,7 @@ export const App = () => {
 
       <div style={{ marginTop: 12 }}>
         <p>Кількість пропусків занять:</p>
-        <select
-          className="select-missed-lesson"
-          value={missedCount}
-          onChange={(e) => handleMissedCountChange(Number(e.target.value))}
-        >
+        <select className="select-missed-lesson" value={missedCount} onChange={(e) => handleMissedCountChange(Number(e.target.value))}>
           <option value={0}>0 Занять</option>
           <option value={1}>1 Заняття</option>
           <option value={2}>2 Заняття</option>
@@ -263,22 +179,14 @@ export const App = () => {
           {Array.from({ length: missedCount }).map((_, idx) => (
             <label key={idx} style={{ display: "block", marginBottom: 6 }}>
               Дата пропуску заняття
-              <input
-                className="missed-date"
-                type="date"
-                value={missedDates[idx] || ""}
-                onChange={(e) => handleMissedDateChange(idx, e.target.value)}
-                style={{ marginLeft: 8 }}
-              />
+              <input type="date" className="missed-date" value={missedDates[idx] || ""} onChange={(e) => handleMissedDateChange(idx, e.target.value)} style={{ marginLeft: 8 }} />
             </label>
           ))}
         </div>
       </div>
 
       <div style={{ marginTop: 12 }}>
-        <button className="create-table" type="button" onClick={handleCreateEntry}>
-          Побудувати таблицю
-        </button>
+        <button className="create-table" type="button" onClick={handleCreateEntry}>Побудувати таблицю</button>
       </div>
 
       <div className="wrapper-table" style={{ marginTop: 18 }}>
@@ -286,35 +194,17 @@ export const App = () => {
           <div key={entry.id} style={{ border: "1px solid #ddd", padding: 12, marginBottom: 10 }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
-                <tr>
-                  <th colSpan="2">{entry.group}</th>
-                </tr>
+                <tr><th colSpan="2">{entry.group}</th></tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Кураторські</td>
-                  <td>{entry.percentAmount}</td>
-                </tr>
-                <tr>
-                  <td>Ко-тренерські</td>
-                  <td>{entry.koTrainerSum}</td>
-                </tr>
-
-                {entry.missedDates && entry.missedDates.length > 0 &&
-                  entry.missedDates.map((d, i) => (
-                    <tr key={i}>
-                      <td>Пропуск {formatDateForDisplay(d)}</td>
-                      <td>{entry.costOneLesson}</td>
-                    </tr>
-                  ))}
-
-                <tr>
-                  <td>Всього:</td>
-                  <td>{entry.income}</td>
-                </tr>
+                <tr><td>Кураторські</td><td>{entry.percentAmount}</td></tr>
+                <tr><td>Ко-тренерські</td><td>{entry.koTrainerSum}</td></tr>
+                {entry.missedDates.map((d, i) => (
+                  <tr key={i}><td>Пропуск {formatDateForDisplay(d)}</td><td>{entry.costOneLesson}</td></tr>
+                ))}
+                <tr><td>Всього:</td><td>{entry.income}</td></tr>
               </tbody>
             </table>
-
             <div style={{ marginTop: 8 }}>
               <button onClick={() => handleRemoveEntry(entry.id)} type="button">X</button>
             </div>
@@ -329,7 +219,6 @@ export const App = () => {
   );
 };
 
-// helper to show dd.mm (from yyyy-mm-dd)
 function formatDateForDisplay(value) {
   if (!value) return "";
   const d = new Date(value);
