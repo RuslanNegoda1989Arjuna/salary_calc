@@ -57,8 +57,10 @@ button.clean:hover {
 
 button.delete-entry {
   background-color: #dc3545;
-  margin-bottom: 6px;
-  width: 100%;
+  margin-bottom: 3px;
+  width: 35px;
+  border-radius: 15px;
+  font-size: 20px;
 }
 
 button.delete-entry:hover {
