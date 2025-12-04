@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/salary_calc/static/css/main.9273b405.css",
+    "main.js": "/salary_calc/static/js/main.fcb4ee44.js",
+    "index.html": "/salary_calc/index.html",
+    "main.9273b405.css.map": "/salary_calc/static/css/main.9273b405.css.map",
+    "main.fcb4ee44.js.map": "/salary_calc/static/js/main.fcb4ee44.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9273b405.css",
+    "static/js/main.fcb4ee44.js"
+  ]
+}
