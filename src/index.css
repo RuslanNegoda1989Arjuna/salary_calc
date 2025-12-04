@@ -1,4 +1,5 @@
-@import-normalize; /* bring in normalize.css styles */
+/* src/index.css */
+@import-normalize; /* normalize.css для узгодження стилів у всіх браузерах */
 
 body {
   margin: 0;
@@ -7,9 +8,138 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+  color: #333;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.salary-app {
+  font-family: sans-serif;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+/* Заголовки */
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.name-group {
+  margin-bottom: 6px;
+}
+
+/* Кнопки */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  padding: 6px 12px;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button.clean {
+  background-color: #dc3545;
+}
+
+button.clean:hover {
+  background-color: #a71d2a;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0,123,255,0.4);
+}
+
+/* Таблиці */
+.wrapper-table {
+  display: flex;
+  flex-wrap: wrap; /* дозволяє будувати таблиці поруч */
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.entry-table {
+  width: 300px; /* менше, не на всю ширину */
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  background-color: #fafafa;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.entry-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.entry-table th, .entry-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.entry-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+}
+
+.entry-table td {
+  background-color: #fff;
+}
+
+.wrapper-date {
+  margin-top: 8px;
+}
+
+.total-num, .sum-ko-tr, .cost-lesson, .total-income {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Сітка для калькулятора */
+.calc-row {
+  display: grid;
+  grid-template-columns: 1fr 200px;
+  gap: 12px;
+  align-items: end;
+}
+
+/* Малі підказки */
+p {
+  margin: 4px 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
 }
