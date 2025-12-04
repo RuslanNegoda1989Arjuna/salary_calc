@@ -1,9 +1,11 @@
-import React, { useState, useMemo } from "react";
+// src/components/App.jsx
+import React, { useState, useMemo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import "../index.css";
+import groupOptions from "../groups.json"; // імпортуємо JSON зі списком груп
 
 export const App = () => {
-  const [group, setGroup] = useState("Пн 17:00");
+  const [group, setGroup] = useState("");
   const [moneyInput, setMoneyInput] = useState("");
   const [sum, setSum] = useState(0);
   const [percentValue, setPercentValue] = useState(0);
@@ -14,6 +16,11 @@ export const App = () => {
   const [missedDates, setMissedDates] = useState([]);
   const [koCost, setKoCost] = useState(200);
   const [entries, setEntries] = useState([]);
+
+  // Після завантаження встановимо першу групу
+  useEffect(() => {
+    if (groupOptions.length > 0) setGroup(groupOptions[0]);
+  }, []);
 
   const percentAmount = useMemo(() => (percentValue ? Math.ceil((sum * percentValue) / 100) : 0), [sum, percentValue]);
   const koTrainerSum = useMemo(() => koLessonsCount * koCost, [koLessonsCount, koCost]);
@@ -123,18 +130,15 @@ export const App = () => {
           className="select-group"
           value={group}
           onChange={(e) => setGroup(e.target.value)}
+          style={{ width: 200 }} // компактне меню
         >
-          <option value="Пн 17:00">Пн 17:00</option>
-          <option value="Вт 15:30">Вт 15:30</option>
-          <option value="Вт 18:00">Вт 18:00</option>
-          <option value="Ср 18:00">Ср 18:00</option>
-          <option value="Чт 15:30">Чт 15:30</option>
-          <option value="Сб 11:30">Сб 11:30</option>
-          <option value="Сб 14:00">Сб 14:00</option>
-          <option value="Сб 17:00">Сб 17:00</option>
+          {groupOptions.map((g, idx) => (
+            <option key={idx} value={g}>{g}</option>
+          ))}
         </select>
       </div>
 
+      {/* Далі все без змін */}
       <div style={{ marginTop: 12 }}>
         <p>Відсоток кураторських:</p>
         <label style={{ marginRight: 8 }}>
@@ -202,7 +206,7 @@ export const App = () => {
       <div className="wrapper-table">
         {entries.map((entry) => (
           <div key={entry.id} className="entry-table">
-            <button className="delete-entry" onClick={() => handleDeleteEntry(entry.id)}>Видалити</button>
+            <button className="delete-entry" onClick={() => handleDeleteEntry(entry.id)}>×</button>
             <table>
               <thead>
                 <tr><th colSpan="2">{entry.group}</th></tr>
