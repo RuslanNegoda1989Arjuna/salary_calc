@@ -1,7 +1,6 @@
-// src/components/App.jsx
 import React, { useState, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
-import "../index.css"; // підключення стилів
+import "../index.css";
 
 export const App = () => {
   const [group, setGroup] = useState("Пн 17:00");
@@ -13,7 +12,7 @@ export const App = () => {
   const [koLessonsCount, setKoLessonsCount] = useState(0);
   const [missedCount, setMissedCount] = useState(0);
   const [missedDates, setMissedDates] = useState([]);
-  const [koCost, setKoCost] = useState(200); // змінна для введення суми ко-тренерських
+  const [koCost, setKoCost] = useState(200);
   const [entries, setEntries] = useState([]);
 
   const percentAmount = useMemo(() => (percentValue ? Math.ceil((sum * percentValue) / 100) : 0), [sum, percentValue]);
@@ -81,11 +80,15 @@ export const App = () => {
       income,
     };
     setEntries((prev) => [...prev, entry]);
-    handleClear(); // скидаємо поля після додавання
+    handleClear();
+  };
+
+  const handleDeleteEntry = (id) => {
+    setEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
   return (
-    <div className="salary-app" style={{ padding: 20, maxWidth: 900, margin: "0 auto" }}>
+    <div className="salary-app">
       <h1 className="title">Підрахунок ЗП</h1>
 
       <div style={{ marginBottom: 12 }}>
@@ -95,7 +98,7 @@ export const App = () => {
       </div>
 
       <div className="calc-row">
-        <div>
+        <div style={{ flex: 1 }}>
           <label>Сума (через пробіл):</label>
           <input
             className="all-money"
@@ -110,10 +113,9 @@ export const App = () => {
           <button className="calc-total" type="button" onClick={handleCalcSum}>
             Додати (порахувати)
           </button>
-         
         </div>
-         <p className="total">Сума = <span className="total-num">{sum}</span></p>
       </div>
+      <p className="total">Сума = <span className="total-num">{sum}</span></p>
 
       <div style={{ marginTop: 12 }}>
         <h2 className="name-group">Група</h2>
@@ -121,7 +123,6 @@ export const App = () => {
           className="select-group"
           value={group}
           onChange={(e) => setGroup(e.target.value)}
-          style={{ width: 200 }} // робимо select компактним
         >
           <option value="Пн 17:00">Пн 17:00</option>
           <option value="Вт 15:30">Вт 15:30</option>
@@ -201,6 +202,7 @@ export const App = () => {
       <div className="wrapper-table">
         {entries.map((entry) => (
           <div key={entry.id} className="entry-table">
+            <button className="delete-entry" onClick={() => handleDeleteEntry(entry.id)}>Видалити</button>
             <table>
               <thead>
                 <tr><th colSpan="2">{entry.group}</th></tr>

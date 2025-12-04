@@ -1,5 +1,4 @@
-/* src/index.css */
-@import-normalize; /* normalize.css для узгодження стилів у всіх браузерах */
+@import-normalize;
 
 body {
   margin: 0;
@@ -19,12 +18,11 @@ code {
 .salary-app {
   font-family: sans-serif;
   background: #fff;
-  padding: 20px;
+  padding: 40px;
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(0,0,0,0.1);
 }
 
-/* Заголовки */
 .title {
   text-align: center;
   margin-bottom: 20px;
@@ -34,7 +32,6 @@ code {
   margin-bottom: 6px;
 }
 
-/* Кнопки */
 button {
   cursor: pointer;
   border: none;
@@ -58,7 +55,16 @@ button.clean:hover {
   background-color: #a71d2a;
 }
 
-/* Inputs */
+button.delete-entry {
+  background-color: #dc3545;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+button.delete-entry:hover {
+  background-color: #a71d2a;
+}
+
 input[type="text"],
 input[type="number"],
 input[type="date"],
@@ -68,7 +74,6 @@ select {
   padding: 6px 8px;
   font-size: 14px;
   outline: none;
-  width: 100%;
   box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -79,16 +84,26 @@ select:focus {
   box-shadow: 0 0 4px rgba(0,123,255,0.4);
 }
 
-/* Таблиці */
+.all-money {
+  width: 100%;
+ 
+}
+
+.select-group,
+.select-ko-lesson,
+.select-missed-lesson {
+  width: 200px; /* маленькі випадаючі меню */
+}
+
 .wrapper-table {
   display: flex;
-  flex-wrap: wrap; /* дозволяє будувати таблиці поруч */
+  flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
 }
 
 .entry-table {
-  width: 300px; /* менше, не на всю ширину */
+  width: 300px;
   border: 1px solid #ddd;
   border-radius: 6px;
   padding: 8px;
@@ -126,15 +141,13 @@ select:focus {
   color: #007bff;
 }
 
-/* Сітка для калькулятора */
 .calc-row {
   display: grid;
-  grid-template-columns: 1fr 200px;
+  grid-template-columns: 1fr auto;
   gap: 12px;
   align-items: end;
 }
 
-/* Малі підказки */
 p {
   margin: 4px 0;
 }
